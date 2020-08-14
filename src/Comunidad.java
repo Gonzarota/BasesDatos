@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Comunidad {
 
-    String código;
-    String nombre;
+    private String código;
+    private String nombre;
 
     public List<Provincia> getProvincias(){
         List<Provincia> resultado = new ArrayList<Provincia>();
@@ -32,12 +32,9 @@ public class Comunidad {
                     }
         }catch (ClassNotFoundException e){
             System.out.println("No encuentra la clase");
-        }catch (PSQLException e){
+        }catch (SQLException e){
             System.out.println("Error de SQL"+e.toString());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
-
 
         return resultado;
     }
