@@ -9,6 +9,12 @@ public class Comunidad {
     private String código;
     private String nombre;
 
+    public Comunidad(String código, String nombre)
+    {
+        this.código=código;
+        this.nombre=nombre;
+    }
+
     public List<Provincia> getProvincias(){
         List<Provincia> resultado = new ArrayList<Provincia>();
         return resultado;
@@ -18,20 +24,18 @@ public class Comunidad {
         List<Municipio> resultado=new ArrayList<Municipio>();
 
         try{
-            Class.forName("org.postgresql.Driver");
-            String url="jdbc:postgresql://192.168.56.2/geografia";
-            String usuario="censo";
-            String clave="abc";
-            Connection c= DriverManager.getConnection(url,usuario,clave);
-            Statement s=c.createStatement();
-            ResultSet rs=s.executeQuery("SELECT * FROM municipio");
-                    while(rs.next()){
-                        Municipio m=new Municipio();
-                        m.setNombre(rs.getString("nombre"));
-                        resultado.add(m);
-                    }
-        }catch (ClassNotFoundException e){
-            System.out.println("No encuentra la clase");
+            String sql="SELECT * FROM municipio M," +
+                    " provincia P WHERE M.provincia = P.código" +
+                    " AND P.autonomía = ?";
+            PreparedStatement ps=Main.Conexión.prepareStatement(sql);
+            ps.setString(1,this.código);
+            ResultSet rs=ps.executeQuery();
+
+            while(rs.next()){
+                Municipio m=new Municipio();
+                m.setNombre(rs.getString("nombre"));
+                resultado.add(m);
+            }
         }catch (SQLException e){
             System.out.println("Error de SQL"+e.toString());
         }
