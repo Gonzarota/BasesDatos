@@ -1,26 +1,32 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
 
-    public static Connection Conexión=null;
+    public static BaseDeDatos bdd= new BaseDeDatos();
 
     public static void main(String[] args) {
 
-        try {
-            Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://192.168.56.2/geografia";
-            String usuario = "censo";
-            String clave = "abc";
-            Conexión = DriverManager.getConnection(url, usuario, clave);
-        }catch(ClassNotFoundException e){
-            System.out.println("No encuentra la clase");
-        }catch (SQLException e){
-            System.out.println("Error de SQL"+e.toString());
-        }
+        try{
 
+            bdd.conectar();
+            Provincia p = new Provincia("50");
+            Autonomía a= new Autonomía("02");
+            //List<Municipio> municipios=p.municipios();
+            List<Municipio> municipios=a.getMunicipios();
+
+            if(municipios==null){
+                System.out.println("la provincia no existe");
+            }else{
+                System.out.println("Poner los municipios: "+ municipios.size());
+            }
+
+
+        }catch (SQLException e){
+            System.out.println("Error SQL"+ e.toString());
+        }catch (ClassNotFoundException e){
+            System.out.println("Clase no encontroda"+ e.toString());
+        }
 
         //Comunidad c=new Comunidad("02","Aragón");
         //List<Municipio> municipios= c.getMunicipios();
@@ -28,9 +34,9 @@ public class Main {
         //Provincia p=new Provincia("50","Zaragoza");
         //List<Municipio> municipios= p.getMunicipios();
 
-        Provincia p=new Provincia("50","Zaragoza");
-        int pob=p.getPoblación();
-        System.out.println("Población total "+ pob);
+        //Provincia p=new Provincia("50","Zaragoza");
+        //int pob=p.getPoblación();
+        //System.out.println("Población total "+ pob);
 
 
         /*if(municipios.isEmpty()){
@@ -42,5 +48,7 @@ public class Main {
                 System.out.println(m.getNombre());
             }
         }*/
+
+
     }
 }
